@@ -1,2 +1,66 @@
-# yoklama-app
-yoklama listesi
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spor Salonu Yoklama Listesi</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        table { width: 80%; margin: 20px auto; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 10px; text-align: center; }
+        button { margin: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Spor Salonu Yoklama Listesi</h2>
+    <input type="date" id="tarihSecimi">
+    <button onclick="yoklamaEkle()">Yoklama Ekle</button>
+    <table id="yoklamaTablosu">
+        <thead>
+            <tr>
+                <th>İsim</th>
+                <th>Durum</th>
+            </tr>
+        </thead>
+        <tbody id="yoklamaBody"></tbody>
+    </table>
+    
+    <script>
+        const sporcular = ["Ahmet", "Mehmet", "Ali", "Veli", "Can", "Deniz", "Elif", "Fatma", "Gizem", "Hakan", "İrem", "Kadir", "Leyla", "Murat", "Nisa"];
+        const yoklamaListesi = {};
+        
+        function yoklamaEkle() {
+            const tarih = document.getElementById("tarihSecimi").value;
+            if (!tarih) { alert("Lütfen bir tarih seçin."); return; }
+            
+            if (!yoklamaListesi[tarih]) {
+                yoklamaListesi[tarih] = sporcular.map(sporcu => ({ isim: sporcu, durum: "✗" }));
+            }
+            tabloyuGuncelle(tarih);
+        }
+        
+        function tabloyuGuncelle(tarih) {
+            const tbody = document.getElementById("yoklamaBody");
+            tbody.innerHTML = "";
+            yoklamaListesi[tarih].forEach((sporcu, index) => {
+                const tr = document.createElement("tr");
+                const tdIsim = document.createElement("td");
+                tdIsim.textContent = sporcu.isim;
+                
+                const tdDurum = document.createElement("td");
+                const button = document.createElement("button");
+                button.textContent = sporcu.durum;
+                button.onclick = function() {
+                    yoklamaListesi[tarih][index].durum = button.textContent === "✓" ? "✗" : "✓";
+                    button.textContent = yoklamaListesi[tarih][index].durum;
+                };
+                tdDurum.appendChild(button);
+                
+                tr.appendChild(tdIsim);
+                tr.appendChild(tdDurum);
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
